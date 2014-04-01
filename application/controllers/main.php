@@ -8,7 +8,7 @@ class Main extends CI_Controller{
     public function loginValidation(){
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('nome','Login','required|trim|callback_validate_credentials');
+        $this->form_validation->set_rules('nome','Login','required|trim|callback_validarLogin');
 	$this->form_validation->set_rules('password','Senha', 'required|md5|trim');
 
 	if($this->form_validation->run()){
@@ -20,6 +20,17 @@ class Main extends CI_Controller{
             redirect('main/members');
 	}else{
             $this->load->view('vw_login');
+	}
+    }
+    
+    public function validarLogin(){
+            $this->load->model('md_usuario');
+
+	if($this->model_users->permissaoLogin()){
+            return true;
+	} else{
+            $this->form_validation->set_message('validarLogin','Usuario/Senha incorretos');
+            return false;
 	}
     }
     
